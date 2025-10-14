@@ -16,38 +16,32 @@ spec:
     spec:
       containers:
       - name: flask-crud-redis
-        image: parallelacr9875.azurecr.io/flask-crud-api:v1
+        image: parallelacr9875.azurecr.io/flask-crud-api:v2
         ports:
         - containerPort: 5000
         env:
         - name: ENVIRONMENT
           value: "production"
+        # Option A: Use cluster-internal Redis service
         - name: REDIS_HOST
-          value: "redis"
+          value: "redis.default.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        # Option B (alternative): comment out above two and use REDIS_URL instead
+        # - name: REDIS_URL
+        #   value: "tcp://10.0.55.55:6379"
         readinessProbe:
           httpGet:
             path: /healthz
             port: 5000
-          initialDelaySeconds: 5
+          initialDelaySeconds: 15
           periodSeconds: 10
-
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: redis
-# spec:
-#   selector:
-#     matchLabels:
-#       app: redis
-#   replicas: 1
-#   template:
-#     metadata:
-#       labels:
-#         app: redis
-#     spec:
-#       containers:
-#       - name: redis
-#         image: redis:7
-#         ports:
-#         - containerPort: 6379
+          failureThreshold: 5
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
