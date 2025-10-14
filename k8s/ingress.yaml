@@ -8,10 +8,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - flask.parallelservicesllc.com
+    - flask-crud-api.parallelservicesllc.com
     secretName: flask-crud-api-tls
   rules:
-  - host: flask.parallelservicesllc.com
+  - host: flask-crud-api.parallelservicesllc.com
     http:
       paths:
       - path: /
