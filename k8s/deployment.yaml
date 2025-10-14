@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-crud-redis
+  labels:
+    app: flask-crud-redis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-crud-redis
+  template:
+    metadata:
+      labels:
+        app: flask-crud-redis
+    spec:
+      containers:
+      - name: flask-crud-redis
+        image: parallelacr9875.azurecr.io/flask-crud-redis:v1
+        ports:
+        - containerPort: 5000
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: REDIS_HOST
+          value: "redis"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: redis
+# spec:
+#   selector:
+#     matchLabels:
+#       app: redis
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: redis
+#     spec:
+#       containers:
+#       - name: redis
+#         image: redis:7
+#         ports:
+#         - containerPort: 6379
