@@ -7,7 +7,14 @@ MODEL_NAME = os.getenv("MODEL_NAME", "facebook/opt-125m")
 app = FastAPI(title="vLLM CPU Server")
 
 # llm = LLM(model=MODEL_NAME)
-llm = LLM(model=MODEL_NAME, enforce_eager=True)
+# llm = LLM(model=MODEL_NAME, enforce_eager=True)
+llm = LLM(
+    model=MODEL_NAME,
+    enforce_eager=True,   # run in CPU-friendly eager mode
+    swap_space=0,         # disable GPU-style memory paging
+    max_model_len=1024    # optional: reduce memory footprint
+)
+
 active_requests = Gauge("vllm_requests_active", "Number of active inference requests")
 
 @app.get("/healthz")
