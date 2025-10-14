@@ -6,7 +6,8 @@ import os
 MODEL_NAME = os.getenv("MODEL_NAME", "facebook/opt-125m")
 app = FastAPI(title="vLLM CPU Server")
 
-llm = LLM(model=MODEL_NAME)
+# llm = LLM(model=MODEL_NAME)
+llm = LLM(model=MODEL_NAME, enforce_eager=True)
 active_requests = Gauge("vllm_requests_active", "Number of active inference requests")
 
 @app.get("/healthz")
