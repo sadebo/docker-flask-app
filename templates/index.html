@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ app_name }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>{{ app_name }}</h1>
+    <h2>Environment: {{ environment }}</h2>
+
+    <h3>Current Items:</h3>
+    {% if items %}
+      <ul>
+        {% for item in items %}
+          <li><strong>{{ item['name'] }}</strong> — {{ item['description'] }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No items yet. Use POST /items to add one!</p>
+    {% endif %}
+  </div>
+</body>
+</html>
