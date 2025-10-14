@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-server
+  namespace: default
+  labels:
+    app: vllm-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm-server
+  template:
+    metadata:
+      labels:
+        app: vllm-server
+    spec:
+      containers:
+      - name: vllm
+        image: parallelacr9875.azurecr.io/vllm-server:cpu
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8000
+        - name: metrics
+          containerPort: 9090
+        env:
+        - name: MODEL_NAME
+          value: facebook/opt-125m
+        resources:
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+          limits:
+            cpu: "4"
+            memory: "8Gi"
