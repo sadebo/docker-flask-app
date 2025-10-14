@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: flask-crud-redis
-        image: parallelacr9875.azurecr.io/flask-crud-redis:v1
+        image: parallelacr9875.azurecr.io/flask-crud-api:v1
         ports:
         - containerPort: 5000
         env:
