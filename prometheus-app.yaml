@@ -10,6 +10,7 @@ spec:
     chart: kube-prometheus-stack
     targetRevision: 65.2.0 # or latest stable
     helm:
+      skipCrds: true
       values: |
         fullnameOverride: kube-prometheus-stack
         namespaceOverride: monitoring

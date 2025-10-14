@@ -1,0 +1,137 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1718292000000,
+  "links": [],
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total HTTP Requests",
+      "targets": [
+        {
+          "expr": "sum(flask_http_request_total)",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 }
+    },
+    {
+      "type": "stat",
+      "title": "Error Rate (%)",
+      "targets": [
+        {
+          "expr": "(sum(rate(flask_http_request_total{status!~'2..'}[5m])) / sum(rate(flask_http_request_total[5m]))) * 100",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "decimals": 2,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 2 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests Per Second",
+      "targets": [
+        {
+          "expr": "sum(rate(flask_http_request_total[1m])) by (method, endpoint)",
+          "legendFormat": "{{method}} {{endpoint}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 7 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Request Latency (p50 / p90 / p99)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.9, sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p90",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le))",
+          "legendFormat": "p99",
+          "refId": "C"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 11, "w": 12, "h": 7 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Redis Connection Health",
+      "targets": [
+        {
+          "expr": "up{job=\"flask-crud-redis\"}",
+          "legendFormat": "Redis reachable",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 18, "w": 12, "h": 5 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Pod CPU Usage (mCores)",
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"default\", pod=~\"flask-crud-redis.*\"}[2m])) * 1000",
+          "legendFormat": "{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 23, "w": 12, "h": 5 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Pod Memory Usage (MiB)",
+      "targets": [
+        {
+          "expr": "sum(container_memory_usage_bytes{namespace=\"default\", pod=~\"flask-crud-redis.*\"}) / 1024 / 1024",
+          "legendFormat": "{{pod}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 28, "w": 12, "h": 5 }
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": ["flask", "prometheus", "redis", "kubernetes"],
+  "templating": {
+    "list": []
+  },
+  "time": { "from": "now-30m", "to": "now" },
+  "timezone": "",
+  "title": "Flask CRUD API + Redis Metrics",
+  "uid": "flask-crud-redis",
+  "version": 1
+}

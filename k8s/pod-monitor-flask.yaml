@@ -1,18 +1,18 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: flask-crud-api
+  name: flask-crud-redis
   namespace: monitoring
   labels:
     release: kube-prometheus-stack
 spec:
   namespaceSelector:
     matchNames:
-    - default
+    - default # or whatever namespace your app runs in
   selector:
     matchLabels:
-      app: flask-crud-api
+      app: flask-crud-redis
   podMetricsEndpoints:
-  - port: http
+  - port: http # must match container port name in your deployment
     path: /metrics
     interval: 15s
