@@ -4,12 +4,14 @@ from config import Config
 from database import get_connection, init_db
 from prometheus_flask_exporter import PrometheusMetrics
 
-metrics = PrometheusMetrics(app)
-metrics.info("app_info", "Application info", version="2.0.0")
+
 
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config.from_object(Config)
+
+metrics = PrometheusMetrics(app)
+metrics.info("app_info", "Application info", version="2.0.0")
 
 init_db()
 try:
